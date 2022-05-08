@@ -98,6 +98,11 @@ public class GoodsPO implements Serializable {
      */
     private Integer onShelf;
 
+    /**
+     * 商品好评度，每次评价应该更新
+     */
+    private BigDecimal favour;
+
 
 
 }

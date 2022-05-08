@@ -48,18 +48,41 @@ public class GoodsController {
     StoreDao storeDao;
 
     @GetMapping
-    public JsonResult getGoodsPage(Integer pageSize, Integer pageNo, String goodsName) {
+    public JsonResult getGoodsPage(Integer pageSize,
+                                   Integer pageNo,
+                                   String goodsName,
+                                   String sortPolicy) {
         log.info("pageSize:{} pageNo:{} goodsName:{}", pageSize, pageNo, goodsName);
         Page<GoodsPO> objectPage = new Page<>();
         objectPage.setCurrent(pageNo);
         objectPage.setSize(pageSize);
         Page<GoodsPO> page;
 
-        if (goodsName != null) {
-            page = goodsDao.page(objectPage, new QueryWrapper<GoodsPO>()
-                    .like("goods_name", goodsName));
+        if (goodsName != null && !goodsName.equals("")) {
+            QueryWrapper<GoodsPO> queryWrapper = new QueryWrapper<GoodsPO>()
+                    .like("goods_name", goodsName);
+            if ("price-asc".equals(sortPolicy)) {
+                queryWrapper.orderByAsc("price");
+            } else if ("price-desc".equals(sortPolicy)) {
+                queryWrapper.orderByDesc("price");
+            } else if ("sales".equals(sortPolicy)) {
+                queryWrapper.orderByDesc("history_sales");
+            } else if ("favour".equals(sortPolicy)) {
+                queryWrapper.orderByDesc("favour");
+            }
+            page = goodsDao.page(objectPage, queryWrapper);
         } else {
-            page = goodsDao.page(objectPage);
+            QueryWrapper<GoodsPO> queryWrapper = new QueryWrapper<GoodsPO>();
+            if ("price-asc".equals(sortPolicy)) {
+                queryWrapper.orderByAsc("price");
+            } else if ("price-desc".equals(sortPolicy)) {
+                queryWrapper.orderByDesc("price");
+            } else if ("sales".equals(sortPolicy)) {
+                queryWrapper.orderByDesc("history_sales");
+            } else if ("favour".equals(sortPolicy)) {
+                queryWrapper.orderByDesc("favour");
+            }
+            page = goodsDao.page(objectPage, queryWrapper);
         }
 
         Long total = page.getTotal();
