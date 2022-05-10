@@ -3,7 +3,9 @@ package fit.wenchao.second_hand_trading_platform_front.dao.po;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Builder;
 import lombok.Data;
 import lombok.AllArgsConstructor;
@@ -25,51 +27,68 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Builder
 @Accessors(chain = true)
+@TableName("`order`")
 public class OrderPO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
-    private Integer id;
+    public Integer id;
 
     /**
      * 消费者id
      */
-    private Integer consumerId;
+    public Integer consumerId;
 
     /**
      * 商品id
      */
-    private Integer goodsId;
+    public Integer goodsId;
 
     /**
      * 商品折扣
      */
-    private BigDecimal discount;
+    public BigDecimal discount;
 
     /**
      * 订单号
      */
-    private String orderId;
+    public String orderId;
 
     /**
      * 订单状态_id
      */
-    private Integer orderStatusId;
+    public Integer orderStatusId;
 
     /**
      * 下单时间
      */
-    private String orderTime;
+    public String orderTime;
 
     /**
      * 订单总额
      */
-    private BigDecimal totalPrice;
+    public BigDecimal totalPrice;
 
     /**
      * 购买数量
      */
-    private Integer count;
+    public Integer count;
+
+
+    /**
+     * 购买时的商品单价
+     */
+    public BigDecimal price;
+
+    public  void transPrice() {
+        if(price!=null) {
+            price = price.setScale(2, RoundingMode.DOWN);
+        }
+
+        if(totalPrice!=null) {
+            totalPrice = totalPrice.setScale(2, RoundingMode.DOWN);
+        }
+    }
 
 
 

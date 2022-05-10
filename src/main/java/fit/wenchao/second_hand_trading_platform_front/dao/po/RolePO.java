@@ -3,6 +3,7 @@ package fit.wenchao.second_hand_trading_platform_front.dao.po;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Builder;
 import lombok.Data;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Builder
 @Accessors(chain = true)
+@TableName("`role`")
 public class RolePO implements Serializable {
 
     private static final long serialVersionUID = 1L;
