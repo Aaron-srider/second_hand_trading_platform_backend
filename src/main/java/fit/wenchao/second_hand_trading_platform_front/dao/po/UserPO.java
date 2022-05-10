@@ -32,7 +32,7 @@ import static com.baomidou.mybatisplus.annotation.IdType.AUTO;
 @NoArgsConstructor
 @Builder
 @Accessors(chain = true)
-@TableName("user")
+@TableName("`user`")
 public class UserPO implements Serializable {
 
     public interface RegisterNew {
