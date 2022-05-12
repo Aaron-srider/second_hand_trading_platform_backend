@@ -38,69 +38,69 @@ public class UserPO implements Serializable {
     public interface RegisterNew {
     }
 
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
     @TableId(type = AUTO)
-    private Integer id;
+    public Integer id;
 
     /**
      * 用户姓名
      */
     @NotNull(groups = {RegisterNew.class})
-    private String name;
+    public String name;
 
     /**
      * 用户手机号
      */
     @NotNull(groups = {RegisterNew.class})
-    private String phone;
+    public String phone;
 
     /**
      * 用户邮箱
      */
     @NotNull(groups = {RegisterNew.class})
-    private String email;
+    public String email;
 
     /**
      * 密码
      */
     @NotNull(groups = {RegisterNew.class})
-    private String password;
+    public String password;
 
     /**
      * 用户城市
      */
     @NotNull(groups = {RegisterNew.class})
-    private String city;
+    public String city;
 
     /**
      * 性别，0女，1男
      */
     @NotNull(groups = {RegisterNew.class})
-    private Integer sex;
+    public Integer sex;
 
     /**
      * 银行账号
      */
     @NotNull(groups = {RegisterNew.class})
     @Length(max = 16, min = 16, message = "银行卡号必须为16位数", groups = {RegisterNew.class})
-    private String bankAccount;
+    public String bankAccount;
 
     /**
      * 用户金额
      */
-    private BigDecimal amount;
+    public BigDecimal amount;
 
     /**
      * 用户积分，用户购买商品之后，1元消费额即可转换为1个积分。每100个积分可以抵扣1元现金。
      */
-    private Integer credits;
+    public Integer credits;
 
     /**
      * 用户角色id
      */
     @NotNull(groups = {RegisterNew.class})
-    private Integer roleId;
+    public Integer roleId;
 
 
 }
