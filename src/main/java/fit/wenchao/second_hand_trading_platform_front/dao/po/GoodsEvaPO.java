@@ -1,8 +1,10 @@
 
 package fit.wenchao.second_hand_trading_platform_front.dao.po;
 
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 import lombok.Builder;
 import lombok.Data;
@@ -27,38 +29,48 @@ import lombok.experimental.Accessors;
 @TableName("goods_eva")
 public class GoodsEvaPO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
     /**
      * 商品评价
      */
-    private Integer id;
+    @TableId(type=IdType.AUTO)
+    public Integer id;
 
     /**
      * 商品id
      */
-    private Integer goodsId;
+    public Integer goodsId;
 
     /**
      * 购买者id
      */
-    private Integer consumerId;
+    public Integer consumerId;
 
     /**
      * 用户评价星级（0~4）
      */
-    private Integer star;
+    public BigDecimal star;
 
     /**
      * 文字评价
      */
-    private String comment;
+    public String comment;
 
     /**
      * 评价时间
      */
-    private String commentTime;
+    public String commentTime;
+
+    /**
+     * 评价对应的订单id
+     */
+    public Integer orderId;
 
 
+    // 聚合字段
+    @TableField(exist = false)
+    public BigDecimal avgStar;
 
+    
 }

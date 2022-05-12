@@ -1,17 +1,16 @@
 package fit.wenchao.second_hand_trading_platform_front.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import fit.wenchao.second_hand_trading_platform_front.dao.po.GoodsPO;
-import fit.wenchao.second_hand_trading_platform_front.dao.po.RegistApplicationPO;
+import fit.wenchao.second_hand_trading_platform_front.dao.po.StorePO;
 import fit.wenchao.second_hand_trading_platform_front.dao.repo.GoodsDao;
 import fit.wenchao.second_hand_trading_platform_front.dao.repo.StoreDao;
 import fit.wenchao.second_hand_trading_platform_front.utils.JsonResult;
 import fit.wenchao.second_hand_trading_platform_front.utils.PageVo;
 import fit.wenchao.second_hand_trading_platform_front.utils.Picture;
+import fit.wenchao.second_hand_trading_platform_front.utils.ResultCodeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +19,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static fit.wenchao.second_hand_trading_platform_front.utils.WrapperUtils.eq;
+import static fit.wenchao.utils.optional.OptionalUtils.nullable;
 
 /**
  * <p>
@@ -48,65 +46,52 @@ public class GoodsController {
     StoreDao storeDao;
 
     @GetMapping
-    public JsonResult getGoodsPage(Integer pageSize,
-                                   Integer pageNo,
-                                   String goodsName,
-                                   String sortPolicy) {
-        log.info("pageSize:{} pageNo:{} goodsName:{}", pageSize, pageNo, goodsName);
-        Page<GoodsPO> objectPage = new Page<>();
-        objectPage.setCurrent(pageNo);
-        objectPage.setSize(pageSize);
-        Page<GoodsPO> page;
+    public JsonResult getGoodsPage(
+            Page<GoodsPO> page,
+            String goodsName,
+            String sortPolicy) {
 
-        if (goodsName != null && !goodsName.equals("")) {
-            QueryWrapper<GoodsPO> queryWrapper = new QueryWrapper<GoodsPO>()
-                    .like("goods_name", goodsName);
-            if ("price-asc".equals(sortPolicy)) {
-                queryWrapper.orderByAsc("price");
-            } else if ("price-desc".equals(sortPolicy)) {
-                queryWrapper.orderByDesc("price");
-            } else if ("sales".equals(sortPolicy)) {
-                queryWrapper.orderByDesc("history_sales");
-            } else if ("favour".equals(sortPolicy)) {
-                queryWrapper.orderByDesc("favour");
-            }
-            page = goodsDao.page(objectPage, queryWrapper);
-        } else {
-            QueryWrapper<GoodsPO> queryWrapper = new QueryWrapper<GoodsPO>();
-            if ("price-asc".equals(sortPolicy)) {
-                queryWrapper.orderByAsc("price");
-            } else if ("price-desc".equals(sortPolicy)) {
-                queryWrapper.orderByDesc("price");
-            } else if ("sales".equals(sortPolicy)) {
-                queryWrapper.orderByDesc("history_sales");
-            } else if ("favour".equals(sortPolicy)) {
-                queryWrapper.orderByDesc("favour");
-            }
-            page = goodsDao.page(objectPage, queryWrapper);
+        QueryWrapper<GoodsPO> queryWrapper = new QueryWrapper<>();
+
+        if (!"".equals(goodsName)) {
+            queryWrapper.like("goods_name", goodsName);
         }
 
-        Long total = page.getTotal();
-        List<GoodsPO> list = page.getRecords();
+        if ("price-asc".equals(sortPolicy)) {
+            queryWrapper.orderByAsc("price");
+        } else if ("price-desc".equals(sortPolicy)) {
+            queryWrapper.orderByDesc("price");
+        } else if ("sales".equals(sortPolicy)) {
+            queryWrapper.orderByDesc("history_sales");
+        } else if ("favour".equals(sortPolicy)) {
+            queryWrapper.orderByDesc("favour");
+        }
 
-        List<GoodsVo> result = list.stream().map((goodsPO -> {
-            String picture = goodsPO.getPicture();
-            List<Picture> picList = JSONArray.parseArray(picture, Picture.class);
+        goodsDao.page(page, queryWrapper);
 
-            GoodsVo build = GoodsVo.builder().build();
-            BeanUtils.copyProperties(goodsPO, build);
-            build.setPicture(null).setPicList(picList);
-            String storeName = storeDao.getOne(eq("id", goodsPO.getStoreId())).getName();
-            build.setStoreName(storeName);
+        List<GoodsPO> goodsPOList = nullable(page)
+                .map(Page::getRecords)
+                .orElseThrow(() -> new BackendException(ResultCodeEnum.UNKNOWN_ERROR, null));
 
-            return build;
-        })).collect(Collectors.toList());
-
+        List<GoodsVo> result = goodsPOList.stream()
+                .map((goodsPO -> {
+                    GoodsVo goodsVo = GoodsVo.builder().build();
+                    BeanUtils.copyProperties(goodsPO, goodsVo);
+                    List<Picture> pictures = goodsPO.pictureList();
+                    goodsVo.setPicture(null).setPicList(pictures);
+                    StorePO storeWhichGoodsBelong2 = storeDao.getOne(eq("id", goodsPO.getStoreId()));
+                    String storeName = nullable(storeWhichGoodsBelong2)
+                            .map(StorePO::getName)
+                            .orElse(null);
+                    goodsVo.setStoreName(storeName);
+                    return goodsVo;
+                })).collect(Collectors.toList());
 
         PageVo<GoodsVo> build = PageVo.<GoodsVo>builder()
-                .pageNo(pageNo)
-                .pageSize(pageSize)
+                .pageNo(Math.toIntExact(page.getCurrent()))
+                .pageSize(Math.toIntExact(page.getSize()))
                 .pageData(result)
-                .total(Math.toIntExact(total))
+                .total(Math.toIntExact(page.getTotal()))
                 .build();
         return JsonResult.ok(build);
     }

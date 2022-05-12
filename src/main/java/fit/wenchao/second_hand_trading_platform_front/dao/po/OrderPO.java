@@ -12,10 +12,12 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import static fit.wenchao.utils.optional.OptionalUtils.nullable;
+
 /**
  * <p>
  * 订单表
-
+ *
  * </p>
  *
  * @author wc
@@ -80,16 +82,24 @@ public class OrderPO implements Serializable {
      */
     public BigDecimal price;
 
-    public  void transPrice() {
-        if(price!=null) {
-            price = price.setScale(2, RoundingMode.DOWN);
-        }
+    public void scalePrice() {
 
-        if(totalPrice!=null) {
-            totalPrice = totalPrice.setScale(2, RoundingMode.DOWN);
-        }
+        price = nullable(price)
+                .map((value) -> value.setScale(2, RoundingMode.DOWN))
+                .orElse(null);
+
+        totalPrice = nullable(totalPrice)
+                .map((value) -> value.setScale(2, RoundingMode.DOWN))
+                .orElse(null);
     }
 
-
-
+    /**
+     * @return if price and discount exists, return price*discount, or null;
+     */
+    public BigDecimal priceAfterDiscount() {
+        if(price!=null && discount!=null) {
+            return price.multiply(discount);
+        }
+        return null;
+    }
 }

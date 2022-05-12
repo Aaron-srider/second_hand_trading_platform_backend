@@ -1,5 +1,6 @@
 package fit.wenchao.second_hand_trading_platform_front.controller;
 
+import fit.wenchao.second_hand_trading_platform_front.utils.MapName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,7 +51,7 @@ public class OrderVO {
     /**
      * 订单总额
      */
-    @OrderController.MapFieldName("total_price")
+    @MapName("total_price")
     public BigDecimal totalPrice;
 
     /**
@@ -79,17 +80,17 @@ public class OrderVO {
     /**
      * 订单状态名称
      */
-    @OrderController.MapFieldName("order_status")
+    @MapName("order_status")
     public String orderStatusName;
 
     public String goodsSize;
 
     public Integer goodsOldDegree;
 
-    @OrderController.MapFieldName("goodsType")
+    @MapName("goodsType")
     public String goodsTypeName;
 
-    @OrderController.MapFieldName("price_after_discount")
+    @MapName("price_after_discount")
     public BigDecimal priceAfterDiscount;
 
     public String goodsPic;
