@@ -1,12 +1,10 @@
 package fit.wenchao.second_hand_trading_platform_front.dao.repo.impl;
 
-import ch.qos.logback.core.rolling.helper.IntegerTokenConverter;
 import fit.wenchao.second_hand_trading_platform_front.dao.po.RegistApplicationPO;
 import fit.wenchao.second_hand_trading_platform_front.dao.mapper.RegistApplicationMapper;
 import fit.wenchao.second_hand_trading_platform_front.dao.repo.RegistApplicationDao;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

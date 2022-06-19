@@ -1,15 +1,14 @@
 package fit.wenchao.second_hand_trading_platform_front;
 
-import fit.wenchao.mybatisCodeGen.codegen.MybatisCodeGenerator;
-import org.mybatis.spring.annotation.MapperScan;
+import fit.wenchao.second_hand_trading_platform_front.dao.po.GoodsEvaPO;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SecondHandTradingPlatformFrontApplication {
+public class SecondHandTradingPlatformBackendApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(SecondHandTradingPlatformFrontApplication.class, args);
+        SpringApplication.run(SecondHandTradingPlatformBackendApplication.class, args);
         //MybatisCodeGenerator.generateStructureCode();
     }
 

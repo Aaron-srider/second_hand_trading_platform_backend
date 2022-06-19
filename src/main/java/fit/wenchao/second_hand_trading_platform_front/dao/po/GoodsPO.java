@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 import com.alibaba.fastjson.JSONArray;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import fit.wenchao.second_hand_trading_platform_front.utils.Picture;
 import lombok.Builder;
@@ -37,6 +39,7 @@ public class GoodsPO implements Serializable {
 
     public static final long serialVersionUID = 1L;
 
+    @TableId(type= IdType.AUTO)
     public Integer id;
 
     /**

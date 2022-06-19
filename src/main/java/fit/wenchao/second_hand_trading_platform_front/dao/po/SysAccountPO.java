@@ -30,23 +30,23 @@ import lombok.experimental.Accessors;
 @TableName("sys_account")
 public class SysAccountPO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
     /**
      * 自增主键
      */
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    public Integer id;
 
     /**
      * 金额对应的订单
      */
-    private Integer orderId;
+    public Integer orderId;
 
     /**
      * 金额
      */
-    private BigDecimal mount;
+    public BigDecimal mount;
 
 
 

@@ -29,22 +29,23 @@ public class RegisterServiceImpl implements RegisterService {
 
         log.info("registerDto: {}", registerDto);
 
-        String phone = registerDto.getPhone();
+        String phone = registerDto.getEmail();
 
         QueryWrapper<RegistApplicationPO> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("phone", phone);
+        queryWrapper.eq("email", phone);
         RegistApplicationPO one = registApplicationDao.getOne(queryWrapper);
 
         QueryWrapper<UserPO> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper1.eq("phone", phone);
+        queryWrapper1.eq("email", phone);
         UserPO one1 = userDao.getOne(queryWrapper1);
 
         if (one != null || one1!=null) {
-            throw new BackendException(ResultCodeEnum.REPEAT_REGISTRATION, "手机号已注册");
+            throw new BackendException(ResultCodeEnum.REPEAT_REGISTRATION, "邮箱已注册");
         }
 
         RegistApplicationPO registApplicationPO = RegistApplicationPO.builder().build();
         BeanUtils.copyProperties(registerDto, registApplicationPO);
+        registApplicationPO.setId(null);
         registApplicationPO.setBankNo(registerDto.getBankAccount());
 
         String sexStr = registerDto.getSex();

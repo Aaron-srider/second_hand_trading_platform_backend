@@ -4,7 +4,6 @@ import fit.wenchao.second_hand_trading_platform_front.dao.repo.ShopCartDao;
 import fit.wenchao.second_hand_trading_platform_front.service.ShopCartService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 
 /**

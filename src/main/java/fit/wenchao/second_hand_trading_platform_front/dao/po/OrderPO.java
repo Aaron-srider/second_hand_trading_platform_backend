@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Builder;
 import lombok.Data;
@@ -34,6 +36,7 @@ public class OrderPO implements Serializable {
 
     public static final long serialVersionUID = 1L;
 
+    @TableId(type = IdType.AUTO)
     public Integer id;
 
     /**
@@ -76,6 +79,12 @@ public class OrderPO implements Serializable {
      */
     public Integer count;
 
+    public Boolean ifUsePoint;
+
+    public Integer usePoint;
+
+    public Integer addressId;
+
 
     /**
      * 购买时的商品单价
@@ -98,7 +107,7 @@ public class OrderPO implements Serializable {
      */
     public BigDecimal priceAfterDiscount() {
         if(price!=null && discount!=null) {
-            return price.multiply(discount);
+            return price.multiply(discount).setScale(2, RoundingMode.DOWN);
         }
         return null;
     }

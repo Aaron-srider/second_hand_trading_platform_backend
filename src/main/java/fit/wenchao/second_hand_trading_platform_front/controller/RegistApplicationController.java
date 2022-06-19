@@ -2,16 +2,21 @@ package fit.wenchao.second_hand_trading_platform_front.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import fit.wenchao.second_hand_trading_platform_front.dao.po.RegistApplicationPO;
+import fit.wenchao.second_hand_trading_platform_front.dao.po.UserPO;
 import fit.wenchao.second_hand_trading_platform_front.dao.repo.RegistApplicationDao;
 import fit.wenchao.second_hand_trading_platform_front.service.RegistApplicationService;
 import fit.wenchao.second_hand_trading_platform_front.utils.JsonResult;
 import fit.wenchao.second_hand_trading_platform_front.utils.PageVo;
 import fit.wenchao.second_hand_trading_platform_front.utils.ResultCodeEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static fit.wenchao.second_hand_trading_platform_front.utils.dataValidate.ValidatorUtils.validate;
 
 /**
  * <p>
@@ -35,13 +40,29 @@ public class RegistApplicationController {
     @PutMapping("/registerPass")
     public JsonResult registerPass(@RequestBody Integer registerApplicationId) throws Exception {
         registApplicationService.pass(registerApplicationId);
-        return JsonResult.ok(ResultCodeEnum.SUCCESS);
+        return JsonResult.ok(null);
     }
+
+    @PutMapping("/registerFail")
+    @Transactional
+    public JsonResult registerFail(@RequestBody Integer registerApplicationId) throws Exception {
+        log.info("registerApplicationId to be passed:{}", registerApplicationId);
+
+        RegistApplicationPO registApplicationPO = RegistApplicationPO.builder().id(registerApplicationId)
+                .permission((byte) 0).build();
+
+        registApplicationDao.updateById(registApplicationPO);
+
+        log.info("reject registerApplicationPO:{}", registApplicationPO);
+
+        return JsonResult.ok(null);
+    }
+
 
     @GetMapping("/registApplications")
     public JsonResult registApplications(Integer pageSize, Integer pageNo) {
-        log.info("pageSize:{} pageNo:{}",pageSize, pageNo);
-        List<RegistApplicationPO> registApplicationPOList =  registApplicationDao.getPage(pageSize, pageNo);
+        log.info("pageSize:{} pageNo:{}", pageSize, pageNo);
+        List<RegistApplicationPO> registApplicationPOList = registApplicationDao.getPage(pageSize, pageNo);
 
 
         QueryWrapper<RegistApplicationPO> queryWrapper = new QueryWrapper<RegistApplicationPO>();
@@ -52,9 +73,8 @@ public class RegistApplicationController {
         PageVo<RegistApplicationPO> registApplicationPOPage = new PageVo<>();
 
 
-
         registApplicationPOList.forEach((regist) -> {
-            if(regist.getPermission()==null) {
+            if (regist.getPermission() == null) {
                 regist.setPermission((byte) -1);
             }
         });

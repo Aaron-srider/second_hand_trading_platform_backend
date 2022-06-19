@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>fit.wenchao</groupId>
-    <artifactId>second_hand_trading_platform_front</artifactId>
+    <artifactId>second_hand_trading_platform_backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>second_hand_trading_platform_front</name>
     <description>second_hand_trading_platform_front</description>
@@ -25,6 +25,14 @@
             <artifactId>kaptcha</artifactId>
             <version>0.0.9</version>
         </dependency>
+
+        <dependency>
+            <groupId>fit.wenchao</groupId>
+            <artifactId>database-data-mock</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+
 
 
         <dependency>

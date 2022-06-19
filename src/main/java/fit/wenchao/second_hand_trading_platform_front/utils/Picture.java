@@ -12,7 +12,7 @@ import lombok.experimental.Accessors;
 @Builder
 @Accessors(chain = true)
 public class Picture {
-    String no;
-    String base64Str;
-    String name;
+    public String no;
+    public String base64Str;
+    public String name;
 }

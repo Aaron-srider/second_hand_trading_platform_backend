@@ -4,7 +4,6 @@ import fit.wenchao.second_hand_trading_platform_front.dao.repo.StoreRegistApplic
 import fit.wenchao.second_hand_trading_platform_front.service.StoreRegistApplicationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 
 /**

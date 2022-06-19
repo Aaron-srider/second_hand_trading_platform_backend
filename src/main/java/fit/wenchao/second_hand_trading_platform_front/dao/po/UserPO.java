@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import fit.wenchao.second_hand_trading_platform_front.utils.DontReturn;
+import fit.wenchao.second_hand_trading_platform_front.utils.MapName;
 import lombok.Builder;
 import lombok.Data;
 import lombok.AllArgsConstructor;
@@ -65,6 +67,7 @@ public class UserPO implements Serializable {
      * 密码
      */
     @NotNull(groups = {RegisterNew.class})
+    @DontReturn
     public String password;
 
     /**

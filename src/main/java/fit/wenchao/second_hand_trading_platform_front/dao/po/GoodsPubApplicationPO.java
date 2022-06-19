@@ -30,70 +30,70 @@ import lombok.experimental.Accessors;
 @TableName("goods_pub_application")
 public class GoodsPubApplicationPO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
     @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
+    public Integer id;
 
     /**
      * 用户名称
      */
-    private String goodsName;
+    public String goodsName;
 
     /**
      * 审批时间
      */
-    private String approvalTime;
+    public String approvalTime;
 
     /**
      * 店铺id
      */
-    private Integer storeId;
+    public Integer storeId;
 
     /**
      * 商品类别id
      */
-    private Integer goodsType;
+    public Integer goodsType;
 
     /**
      * 商品折扣，保留2为小数
      */
-    private BigDecimal discount;
+    public BigDecimal discount;
 
     /**
      * 商品尺寸
      */
-    private String size;
+    public String size;
 
     /**
      * 商品原价
      */
-    private BigDecimal amount;
+    public BigDecimal amount;
 
     /**
      * 商品图片，json数组
      */
-    private String picture;
+    public String picture;
 
     /**
      * 是否允许议价（0不允许，1允许，默认0）
      */
-    private Boolean bargainOrNot;
+    public Boolean bargainOrNot;
 
     /**
      * 商品数量
      */
-    private Integer num;
+    public Integer num;
 
     /**
      * 商品新旧程度，1~9成
      */
-    private Integer oldDegree;
+    public Integer oldDegree;
 
     /**
      * 是否通过，-1默认，0不通过，1通过
      */
-    private Boolean permission;
+    public Integer permission;
 
 
 

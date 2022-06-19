@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static fit.wenchao.utils.collection.SimpleFactories.ofList;
+import static fit.wenchao.utils.optional.OptionalUtils.nullable;
 
 public class MapFieldName {
     public static List<Map<String, Object>> mapList(List<?> targetList) {
@@ -24,22 +25,33 @@ public class MapFieldName {
         Arrays.stream(declaredField).forEach((field -> {
             field.setAccessible(true);
             MapName annotation = field.getAnnotation(MapName.class);
-
-            if (annotation != null) {
-                String frontName = annotation.value();
+            boolean mapNameSuccess = nullable(annotation).map((annotationValue) ->{
+                String frontName = annotationValue.value();
                 try {
                     map.put(frontName, field.get(target));
+                    return true;
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                     throw new RuntimeException(e.getMessage());
                 }
-            } else {
-                try {
-                    map.put(field.getName(), field.get(target));
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e.getMessage());
-                }
+            }).orElse(false);
+
+            if(mapNameSuccess) {
+                return ;
+            }
+
+            DontReturn dontReturn = field.getAnnotation(DontReturn.class);
+            boolean dontReturnSuccess = nullable(dontReturn).map((annotationValue) -> true).orElse(false);
+
+            if(dontReturnSuccess) {
+                return ;
+            }
+
+            try {
+                map.put(field.getName(), field.get(target));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
             }
         }));
         return map;

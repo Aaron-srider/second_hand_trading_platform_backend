@@ -28,19 +28,19 @@ import lombok.experimental.Accessors;
 @TableName("`role`")
 public class RolePO implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
-    private Integer id;
+    public Integer id;
 
     /**
      * 角色名称
      */
-    private String name;
+    public String name;
 
     /**
      * 角色英文代码
      */
-    private String code;
+    public String code;
 
 
 

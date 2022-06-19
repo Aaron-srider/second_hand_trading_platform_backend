@@ -1,11 +1,12 @@
 package fit.wenchao.second_hand_trading_platform_front.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import fit.wenchao.second_hand_trading_platform_front.dao.po.GoodsPO;
+import fit.wenchao.second_hand_trading_platform_front.dao.po.GoodsPubApplicationPO;
 import fit.wenchao.second_hand_trading_platform_front.dao.po.StorePO;
 import fit.wenchao.second_hand_trading_platform_front.dao.repo.GoodsDao;
+import fit.wenchao.second_hand_trading_platform_front.dao.repo.GoodsPubApplicationDao;
 import fit.wenchao.second_hand_trading_platform_front.dao.repo.StoreDao;
 import fit.wenchao.second_hand_trading_platform_front.utils.JsonResult;
 import fit.wenchao.second_hand_trading_platform_front.utils.PageVo;
@@ -16,12 +17,14 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
+import static fit.wenchao.second_hand_trading_platform_front.utils.MapFieldName.mapFieldName;
 import static fit.wenchao.second_hand_trading_platform_front.utils.WrapperUtils.eq;
 import static fit.wenchao.utils.optional.OptionalUtils.nullable;
 
@@ -36,7 +39,6 @@ import static fit.wenchao.utils.optional.OptionalUtils.nullable;
 @RestController
 @CrossOrigin(allowCredentials = "true")
 @Slf4j
-@RequestMapping("/goods")
 public class GoodsController {
 
     @Autowired
@@ -45,13 +47,15 @@ public class GoodsController {
     @Autowired
     StoreDao storeDao;
 
-    @GetMapping
+    @GetMapping("/goods")
     public JsonResult getGoodsPage(
             Page<GoodsPO> page,
             String goodsName,
             String sortPolicy) {
 
         QueryWrapper<GoodsPO> queryWrapper = new QueryWrapper<>();
+
+        queryWrapper.eq("on_shelf", 1);
 
         if (!"".equals(goodsName)) {
             queryWrapper.like("goods_name", goodsName);
@@ -75,10 +79,11 @@ public class GoodsController {
 
         List<GoodsVo> result = goodsPOList.stream()
                 .map((goodsPO -> {
-                    GoodsVo goodsVo = GoodsVo.builder().build();
+                    GoodsVo goodsVo = new GoodsVo();
                     BeanUtils.copyProperties(goodsPO, goodsVo);
                     List<Picture> pictures = goodsPO.pictureList();
-                    goodsVo.setPicture(null).setPicList(pictures);
+                    goodsVo.setPicture(null);
+                    goodsVo.setPicList(pictures);
                     StorePO storeWhichGoodsBelong2 = storeDao.getOne(eq("id", goodsPO.getStoreId()));
                     String storeName = nullable(storeWhichGoodsBelong2)
                             .map(StorePO::getName)
@@ -95,4 +100,26 @@ public class GoodsController {
                 .build();
         return JsonResult.ok(build);
     }
+
+
+    @GetMapping("/oneGoods")
+    public JsonResult getOneGoodsById(Integer goodsId) {
+        GoodsPO goodsPo = goodsDao.getById(goodsId);
+
+        Map<String, Object> resultGoods = nullable(goodsPo).map(goodsPO -> {
+            GoodsVo goodsVo = new GoodsVo();
+            BeanUtils.copyProperties(goodsPO, goodsVo);
+            goodsVo.picture = null;
+            goodsVo.picList = goodsPo.pictureList();
+            return mapFieldName(goodsVo);
+        }).orElseGet(HashMap::new);
+
+        return JsonResult.ok(resultGoods);
+    }
+
+
+
+
+
+
 }
